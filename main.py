@@ -1,10 +1,8 @@
-from fastapi import FastAPI
-from motor.motor_asyncio import AsyncIOMotorClient
-from pydantic import BaseModel
-from datetime import date
-from typing import Optional
+from contextlib import asynccontextmanager
 
-app = FastAPI()
+from fastapi import FastAPI, Request
+from motor.motor_asyncio import AsyncIOMotorClient
+from crud import router as crud_router
 
 MONGO_URL = "mongodb://localhost:27017"
 client = AsyncIOMotorClient(MONGO_URL)
@@ -12,24 +10,18 @@ db = client.bookstore
 collection = db.books
 
 
-class Book(BaseModel):
-    title: str
-    author: str
-    genre: str
-    release_date: date
-    cover: Optional[str] = None
-
-
-@app.on_event("startup")
-async def startup_db_client():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     app.mongodb_client = AsyncIOMotorClient(MONGO_URL)
     app.mongodb = app.mongodb_client.bookstore
-
-
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    app.mongodb_client = AsyncIOMotorClient(MONGO_URL)
+    yield
     app.mongodb_client.close()
 
 
-__all__ = ["Book", "collection"]
+app = FastAPI(lifespan=lifespan)
+app.include_router(crud_router)
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="127.0.0.1", port=8001)
