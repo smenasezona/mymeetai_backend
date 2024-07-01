@@ -1,13 +1,35 @@
 from fastapi import FastAPI
+from motor.motor_asyncio import AsyncIOMotorClient
+from pydantic import BaseModel
+from datetime import date
+from typing import Optional
 
 app = FastAPI()
 
+MONGO_URL = "mongodb://localhost:27017"
+client = AsyncIOMotorClient(MONGO_URL)
+db = client.bookstore
+collection = db.books
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+
+class Book(BaseModel):
+    title: str
+    author: str
+    genre: str
+    release_date: date
+    cover: Optional[str] = None
 
 
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
+@app.on_event("startup")
+async def startup_db_client():
+    app.mongodb_client = AsyncIOMotorClient(MONGO_URL)
+    app.mongodb = app.mongodb_client.bookstore
+
+
+@app.on_event("shutdown")
+async def shutdown_db_client():
+    app.mongodb_client = AsyncIOMotorClient(MONGO_URL)
+    app.mongodb_client.close()
+
+
+__all__ = ["Book", "collection"]
