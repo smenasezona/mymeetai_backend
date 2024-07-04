@@ -8,6 +8,7 @@ class Book(BaseModel):
     author: str
     genre: str
     release_year: int = Field(..., alias="release_date")
+    description: str
     cover: Optional[str] = None
 
     @classmethod
