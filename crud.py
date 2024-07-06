@@ -6,6 +6,11 @@ from database import collection
 router = APIRouter()
 
 
+@router.get("/")
+async def root():
+    return {"message": "Welcome to the Book API"}
+
+
 @router.post("/books/", response_model=Book)
 async def create_book(book: Book):
     new_book = await collection.insert_one(book.dict(by_alias=True))

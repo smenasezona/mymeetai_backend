@@ -1,4 +1,6 @@
 from contextlib import asynccontextmanager
+import logging
+
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Request
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -6,6 +8,7 @@ from crud import router as crud_router
 import os
 
 MONGO_URL = os.getenv("MONGODB_URI", "mongodb+srv://wings:<password>@cluster0.vzgllba.mongodb.net/")
+logging.info(f"Connecting to MongoDB: {MONGO_URL}")
 client = AsyncIOMotorClient(MONGO_URL)
 db = client.bookstore
 collection = db.books
