@@ -3,8 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Request
 from motor.motor_asyncio import AsyncIOMotorClient
 from crud import router as crud_router
+import os
 
-MONGO_URL = "mongodb+srv://wings:<password>@cluster0.vzgllba.mongodb.net/"
+MONGO_URL = os.getenv("MONGODB_URI", "mongodb+srv://wings:<password>@cluster0.vzgllba.mongodb.net/")
 client = AsyncIOMotorClient(MONGO_URL)
 db = client.bookstore
 collection = db.books
@@ -31,4 +32,5 @@ app.include_router(crud_router)
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="127.0.0.1", port=8001)
+    port = int(os.getenv("PORT", 8001))
+    uvicorn.run(app, host="0.0.0.0", port=port)
