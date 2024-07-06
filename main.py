@@ -1,14 +1,13 @@
 from contextlib import asynccontextmanager
 import logging
-
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI, Request
-from motor.motor_asyncio import AsyncIOMotorClient
-from crud import router as crud_router
 import os
 
-MONGO_URL = os.getenv("MONGODB_URI",
-                      "mongodb+srv://wings:P1gG3F4ZJLcJvld0@cluster0.vzgllba.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI
+from motor.motor_asyncio import AsyncIOMotorClient
+from config import MONGO_URL
+from crud import router as crud_router
+
 logging.info(f"Connecting to MongoDB: {MONGO_URL}")
 
 
@@ -27,6 +26,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 app.include_router(crud_router)
 
 if __name__ == "__main__":
