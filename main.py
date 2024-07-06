@@ -7,7 +7,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from crud import router as crud_router
 import os
 
-MONGO_URL = os.getenv("MONGODB_URI", "mongodb+srv://wings:<password>@cluster0.vzgllba.mongodb.net/")
+MONGO_URL = os.getenv("MONGODB_URI",
+                      "mongodb+srv://wings:<P1gG3F4ZJLcJvld0>@cluster0.vzgllba.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 logging.info(f"Connecting to MongoDB: {MONGO_URL}")
 client = AsyncIOMotorClient(MONGO_URL)
 db = client.bookstore
@@ -36,4 +37,4 @@ if __name__ == "__main__":
     import uvicorn
 
     port = int(os.getenv("PORT", 8001))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run(app, host="127.0.0.1", port=port)
