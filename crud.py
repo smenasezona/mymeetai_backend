@@ -22,8 +22,8 @@ async def read_book(book_id: str):
 
 
 @router.get("/books/", response_model=list[Book])
-async def read_books():
-    books = await collection.find().to_list(1000)
+async def read_books(skip: int = 0, limit: int = 10):
+    books = await collection.find().skip(skip).limit(limit).to_list(limit)
     return books
 
 

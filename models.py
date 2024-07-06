@@ -1,6 +1,6 @@
-from pydantic import BaseModel, Field, field_validator
 from datetime import date
 from typing import Optional
+from pydantic import BaseModel, Field
 
 
 class Book(BaseModel):
@@ -20,3 +20,5 @@ class Book(BaseModel):
     @property
     def release_date(self) -> date:
         return date(self.release_year, 1, 1)
+
+
