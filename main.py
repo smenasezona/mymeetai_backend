@@ -4,7 +4,7 @@ from fastapi import FastAPI, Request
 from motor.motor_asyncio import AsyncIOMotorClient
 from crud import router as crud_router
 
-MONGO_URL = "mongodb://localhost:27017"
+MONGO_URL = "mongodb+srv://wings:<password>@cluster0.vzgllba.mongodb.net/"
 client = AsyncIOMotorClient(MONGO_URL)
 db = client.bookstore
 collection = db.books
