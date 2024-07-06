@@ -8,17 +8,13 @@ from crud import router as crud_router
 import os
 
 MONGO_URL = os.getenv("MONGODB_URI",
-                      "mongodb+srv://wings:<P1gG3F4ZJLcJvld0>@cluster0.vzgllba.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+                      "mongodb+srv://wings:P1gG3F4ZJLcJvld0@cluster0.vzgllba.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 logging.info(f"Connecting to MongoDB: {MONGO_URL}")
-client = AsyncIOMotorClient(MONGO_URL)
-db = client.bookstore
-collection = db.books
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.mongodb_client = AsyncIOMotorClient(MONGO_URL)
-    app.mongodb = app.mongodb_client.bookstore
     yield
     app.mongodb_client.close()
 
